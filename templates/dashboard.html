@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to your dashboard, {{ current_user.username }}!</h1>
+    <h1>Upload CSV File with Package Information</h1>
+    
+    <!-- Flash message for success or error -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+    
+    <!-- CSV upload form -->
+    <form method="POST" enctype="multipart/form-data">
+        <label for="csv_file">Choose CSV File</label>
+        <input type="file" name="csv_file" accept=".csv" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <!-- Button to trigger processing of routes -->
+
+    <form method="POST" action="{{ url_for('process_routes') }}">
+        <button type="submit">Process Routes</button>
+    </form>
+
+    {% if routes %}
+    <h3>Processed Routes</h3>
+    <ul>
+        {% for route in routes %}
+        <li>{{ route }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+
+
+    <!-- Logout button -->
+    <form action="{{ url_for('logout') }}" method="POST">
+        <button type="submit">Logout</button>
+    </form>
+
+    
+</body>
+</html>
