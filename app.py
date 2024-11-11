@@ -6,7 +6,6 @@ from extensions import db
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from geopy.geocoders import Nominatim
 import pandas as pd
-import os
 from datetime import datetime
 from models.route import Package
 
@@ -74,6 +73,8 @@ def register():
 # Login route
 @app.route("/", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -85,8 +86,8 @@ def login():
             return redirect(url_for("dashboard"))
         else:
             flash("Invalid username or password", "danger")
+    return render_template('login.html')
     
-    return render_template("login.html")
 
 # Dashboard route (protected route)
 @app.route("/dashboard" , methods=["GET", "POST"])
