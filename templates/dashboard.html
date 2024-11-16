@@ -47,6 +47,16 @@
         <button type="submit">Process Routes</button> <br><br>
     </form>
 
+    <form method="POST" action="{{ url_for('display_route') }}">
+        <label for="disproute">Select Route: </label>
+            <select name="disproute" required>
+                <option value="" disabled selected>Select a route</option>
+                {% for disproute in disproutes %}
+                    <option value="{{ disproute }}">{{ disproute }}</option>
+                {% endfor %}
+            </select><br><br>
+        <button type="submit">Display Route</button> <br><br>
+    </form>
 
 
     <!-- Logout button -->

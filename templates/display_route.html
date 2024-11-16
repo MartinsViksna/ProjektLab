@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='dashstyle.css') }}">
+    <title>Display Route</title>
+</head>
+<body>
+    
+    <form method="POST" action="{{ url_for('display_route') }}">
+        <label for="disproute">Select Route: </label>
+            <select name="disproute" required>
+                <option value="" disabled selected>Select a route</option>
+                {% for disproute in disproutes %}
+                    <option value="{{ disproute }}">{{ disproute }}</option>
+                {% endfor %}
+            </select><br><br>
+        <button type="submit">Display Route</button> <br><br>
+    </form>
+
+
+    {% if created_routes %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Package ID</th>
+                    <th>Client</th>
+                    <th>Address</th>
+                    <th>Time From</th>
+                    <th>Time To</th>
+                    <th>Planned Arrival</th>
+                    <th>Courier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for route in created_routes %}
+                <tr>
+                    <td>{{ route.package_id }}</td>
+                    <td>{{ route.client }}</td>
+                    <td>{{ route.address }}</td>
+                    <td>{{ route.time_from }}</td>
+                    <td>{{ route.time_to }}</td>
+                    <td>{{ route.planned_arrival }}</td>
+                    <td>{{ route.courier }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No routes available for the selected route.</p>
+    {% endif %}
+    <br><br>
+    <form action="{{ url_for('dashboard') }}">
+        <button type="submit">Dashboard</button>
+    </form>
+    <br><br>
+    <!-- Logout button -->
+    <form action="{{ url_for('logout') }}" method="POST">
+        <button type="submit">Logout</button>
+    </form>
+
+    
+</body>
+</html>

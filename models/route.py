@@ -19,3 +19,5 @@ class CreatedRoutes(db.Model):
     order = db.Column(db.Integer, nullable=False)
     route = db.Column(db.String(50), db.ForeignKey('package.route'), nullable=False)
     planned_arrival = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+

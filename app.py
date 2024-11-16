@@ -96,7 +96,6 @@ def dashboard():
             try:
                 # Read CSV file into pandas dataframe
                 df = pd.read_csv(file)
-                
                 # Iterate over each row in the dataframe
                 for index, row in df.iterrows():
                     # Extract data from CSV row
@@ -135,7 +134,9 @@ def dashboard():
             
     route_names = db.session.query(Package.route).filter_by(user_id=current_user.id).distinct().all()
     route_names = [route[0] for route in route_names]
-    return render_template("dashboard.html", routes=route_names)
+    disproute_names = db.session.query(CreatedRoutes.route).filter_by(user_id=current_user.id).distinct().all()
+    disproute_names = [route[0] for route in disproute_names]
+    return render_template("dashboard.html", routes=route_names, disproutes =  disproute_names)
 
 
 
@@ -178,7 +179,7 @@ def process_routes():
             return redirect(url_for("dashboard"))
             
         # Clear existing routes for this route_name
-        CreatedRoutes.query.filter_by(route=route_name).delete()
+        CreatedRoutes.query.filter_by(route=route_name, user_id=current_user.id).delete()
         
         # Add new routes
         for route in routes:
@@ -188,7 +189,8 @@ def process_routes():
                     courier=stop["courier"],
                     order=stop["order"],
                     route=stop["route"],
-                    planned_arrival=stop.get("planned_arrival")
+                    planned_arrival=stop.get("planned_arrival"),
+                    user_id=current_user.id
                 )
                 db.session.add(created_route)
                 
@@ -200,6 +202,34 @@ def process_routes():
      
 
 # Logout route
+@app.route("/display_route", methods=["POST"])
+@login_required
+def display_route():
+    try:
+        route_name = request.form['disproute']
+        if route_name:
+            disproute_names = db.session.query(CreatedRoutes.route).filter_by(user_id=current_user.id).distinct().all()
+            disproute_names = [route[0] for route in disproute_names]
+            created_routes = db.session.query(
+                CreatedRoutes.package_id,
+                CreatedRoutes.courier,
+                CreatedRoutes.order,
+                CreatedRoutes.planned_arrival,
+                Package.client,
+                Package.address,
+                Package.time_from,
+                Package.time_to
+            ).join(Package, CreatedRoutes.package_id == Package.package_id) \
+            .filter(Package.user_id == current_user.id) \
+            .order_by(CreatedRoutes.courier.asc(), CreatedRoutes.order.asc()) \
+            .all()
+            return render_template("display_route.html", created_routes=created_routes, disproutes =  disproute_names)
+
+    except Exception as e:
+        flash(f"Error displaying routes: {e}", "danger")
+        return redirect(url_for("dashboard"))
+    return redirect(url_for("dashboard"))
+
 @app.route("/logout", methods=["POST"])
 @login_required
 def logout():
