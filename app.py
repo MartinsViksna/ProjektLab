@@ -7,7 +7,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from geopy.geocoders import Nominatim
 import pandas as pd
 from datetime import datetime
-from models.route import Package
+from models.route import Package, CreatedRoutes
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -30,17 +30,13 @@ with app.app_context():
     db.create_all()
 
 
- # Redirect to login if user is not logged in
-
-# Create tables in the database
-
-
-def geocode_address(address):
+def geocode_address(address,retry):
     location = geolocator.geocode(address)
     if location:
         return location.latitude, location.longitude
-    else:
-        geocode_address(address)
+    elif retry<=10:
+        geocode_address(address, retry+1)
+    else: return None, None
 
 # User loader function for Flask-Login
 @login_manager.user_loader
@@ -95,6 +91,7 @@ def login():
 def dashboard():
     if request.method == "POST":
         file = request.files['csv_file']
+        name = request.form['name']
         if file:
             try:
                 # Read CSV file into pandas dataframe
@@ -110,7 +107,7 @@ def dashboard():
                     time_to = row["Time to"]
                     
                     # Geocode the address
-                    latitude, longitude = geocode_address(address)
+                    latitude, longitude = geocode_address(address,0)
                     
                     # Create new package instance
                     new_package = Package(
@@ -122,7 +119,7 @@ def dashboard():
                         latitude=latitude,
                         longitude=longitude,
                         user_id=current_user.id,  # Associate package with the logged-in user
-                        date=datetime.now().date()
+                        route = name
                     )
                     
                     # Add to the database
@@ -135,16 +132,25 @@ def dashboard():
             except Exception as e:
                 flash(f"Error processing CSV file: {e}", "danger")
                 return redirect(url_for("dashboard"))
-        return render_template("dashboard.html", routes=routes)
-    return render_template("dashboard.html", routes=routes)
+            
+    route_names = db.session.query(Package.route).filter_by(user_id=current_user.id).distinct().all()
+    route_names = [route[0] for route in route_names]
+    return render_template("dashboard.html", routes=route_names)
+
+
 
 @app.route("/process_routes", methods=["POST"])
 @login_required
 def process_routes():
-    global routes
     try:
         # Fetch the delivery data for the current user from the database
-        deliveries = Package.query.filter_by(user_id=current_user.id, date=datetime.now().date()).all()
+        couriers = request.form['couriers']
+        depot = request.form['depot']
+        route_name = request.form['route']
+        depot_lat,depot_long = geocode_address(depot,0)
+        print(couriers,depot, depot_lat, depot_long)
+        deliveries = Package.query.filter_by(user_id=current_user.id, route=route_name).all()
+        print(deliveries)
 
         # Prepare the data for VRP solver
         delivery_data = pd.DataFrame([{
@@ -153,22 +159,41 @@ def process_routes():
             'address': d.address,
             'latitude': d.latitude,
             'longitude': d.longitude,
-            'time_from': d.time_from,
-            'time_to': d.time_to
+            'time_from':  d.time_from,
+            'time_to':  d.time_to
         } for d in deliveries])
 
-        # Define the depot location (e.g., the user's base location)
-        depot_location = (56.9514905, 24.1133043)  # Example coordinates
-
         # Create and solve the VRP
-        vrp_solver = SolomonVRP(delivery_data, couriers=3, depot_location=depot_location)
-        routes = vrp_solver.create_routes()
-        print("Assigned Routes for Couriers:")
-        for i, route in enumerate(routes):
-            print(f"Courier {i + 1}: {route}")
-
-        flash("Routes have been processed successfully!", "success")
-        return render_template("dashboard.html", routes=routes, csv_uploaded=True)
+        print(route_name)
+        vrp_solver = SolomonVRP(
+            delivery_data, 
+            couriers, 
+            (depot_lat, depot_long),
+            route_name
+        )
+        
+        routes = vrp_solver.solve()
+        if not routes:
+            flash("Could not find a valid solution", "danger")
+            return redirect(url_for("dashboard"))
+            
+        # Clear existing routes for this route_name
+        CreatedRoutes.query.filter_by(route=route_name).delete()
+        
+        # Add new routes
+        for route in routes:
+            for stop in route:
+                created_route = CreatedRoutes(
+                    package_id=stop["package_id"],
+                    courier=stop["courier"],
+                    order=stop["order"],
+                    route=stop["route"],
+                    planned_arrival=stop.get("planned_arrival")
+                )
+                db.session.add(created_route)
+                
+        db.session.commit()
+        return redirect(url_for("dashboard"))
     except Exception as e:
         flash(f"Error processing routes: {e}", "danger")
         return redirect(url_for("dashboard"))
