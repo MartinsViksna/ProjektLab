@@ -76,13 +76,14 @@
     {% endif %}
 
     <br><br>
-    <h3>Route Deliveries Visualization</h3>
-    <div id="map"></div>
-
     <form action="{{ url_for('dashboard') }}">
         <button type="submit">Dashboard</button>
     </form>
     <br><br>
+    <h3>Route Deliveries Visualization</h3>
+    <div id="map"></div>
+
+    
     <form action="{{ url_for('logout') }}" method="POST">
         <button type="submit">Logout</button>
     </form>
