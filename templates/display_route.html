@@ -3,22 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='dashstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dashstyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
     <title>Display Route</title>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+            margin: 20px 0;
+            border: 2px solid #ccc;
+        }
+        .legend {
+            padding: 6px 8px;
+            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            line-height: 24px;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+    </style>
 </head>
 <body>
-    
     <form method="POST" action="{{ url_for('display_route') }}">
         <label for="disproute">Select Route: </label>
-            <select name="disproute" required>
-                <option value="" disabled selected>Select a route</option>
-                {% for disproute in disproutes %}
-                    <option value="{{ disproute }}">{{ disproute }}</option>
-                {% endfor %}
-            </select><br><br>
-        <button type="submit">Display Route</button> <br><br>
+        <select name="disproute" required>
+            <option value="" disabled selected>Select a route</option>
+            {% for disproute in disproutes %}
+                <option value="{{ disproute }}">{{ disproute }}</option>
+            {% endfor %}
+        </select><br><br>
+        <button type="submit">Display Route</button><br><br>
     </form>
-
 
     {% if created_routes %}
         <table border="1">
@@ -31,6 +53,7 @@
                     <th>Time To</th>
                     <th>Planned Arrival</th>
                     <th>Courier</th>
+                    <th>Order</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +66,7 @@
                     <td>{{ route.time_to }}</td>
                     <td>{{ route.planned_arrival }}</td>
                     <td>{{ route.courier }}</td>
+                    <td>{{ route.order }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -50,16 +74,143 @@
     {% else %}
         <p>No routes available for the selected route.</p>
     {% endif %}
+
     <br><br>
+    <h3>Route Deliveries Visualization</h3>
+    <div id="map"></div>
+
     <form action="{{ url_for('dashboard') }}">
         <button type="submit">Dashboard</button>
     </form>
     <br><br>
-    <!-- Logout button -->
     <form action="{{ url_for('logout') }}" method="POST">
         <button type="submit">Logout</button>
     </form>
 
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script>
+        {% if created_routes %}
+            // Initialize the map
+            var map = L.map('map').setView([0, 0], 2);
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Parse the routes data safely
+            var routesData = [
+                {% for route in created_routes %}
+                    {
+                        packageId: "{{ route.package_id }}",
+                        client: "{{ route.client }}",
+                        address: "{{ route.address }}",
+                        courier: "{{ route.courier }}",
+                        order: {{ route.order }},
+                        plannedArrival: "{{ route.planned_arrival }}",
+                        latitude: {{ route.latitude|default(0) }},
+                        longitude: {{ route.longitude|default(0) }},
+                        depot: "{{ route.depot }}",
+                        depotLat: {{ route.depot_lat }},
+                        depotLong: {{ route.depot_long }}
+                    }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ];
+
+            // Generate colors for couriers
+            var uniqueCouriers = [...new Set(routesData.map(route => route.courier))];
+            var colors = ['#FF0000', '#0000FF', '#008000', '#FFA500', '#800080', '#00FFFF', '#FF00FF', '#FFD700'];
+            var courierColors = {};
+            uniqueCouriers.forEach((courier, index) => {
+                courierColors[courier] = colors[index % colors.length];
+            });
+
+            // Create legend
+            var legend = L.control({position: 'bottomright'});
+            legend.onAdd = function (map) {
+                var div = L.DomUtil.create('div', 'legend');
+                div.innerHTML += '<h4>Couriers</h4>';
+                uniqueCouriers.forEach(courier => {
+                    div.innerHTML += 
+                        '<i style="background: ' + courierColors[courier] + '"></i> ' +
+                        courier + '<br>';
+                });
+                div.innerHTML += '<i style="background: #000000"></i>Depot<br>';
+                return div;
+            };
+            legend.addTo(map);
+
+            // Add markers and routes
+            var bounds = L.latLngBounds();
+            
+            if (routesData.length > 0) {
+                // Use the geocoded depot coordinates
+                var depotCoords = [routesData[0].depotLat, routesData[0].depotLong];
+                
+                var depotIcon = L.divIcon({
+                    html: '📍',
+                    iconSize: [25, 25],
+                    className: 'depot-marker'
+                });
+                
+                L.marker(depotCoords, {icon: depotIcon})
+                    .bindPopup('Depot: ' + routesData[0].depot)
+                    .addTo(map);
+                
+                bounds.extend(depotCoords);
+
+                // Group routes by courier
+                var courierRoutes = {};
+                routesData.forEach(route => {
+                    if (!courierRoutes[route.courier]) {
+                        courierRoutes[route.courier] = [];
+                    }
+                    courierRoutes[route.courier].push(route);
+                });
+
+                // Sort routes by order for each courier and draw connected routes
+                Object.keys(courierRoutes).forEach(courier => {
+                    var courierDeliveries = courierRoutes[courier].sort((a, b) => a.order - b.order);
+                    
+                    // Create array of coordinates starting with depot
+                    var routeCoordinates = [depotCoords];
+                    
+                    courierDeliveries.forEach(delivery => {
+                        var point = [delivery.latitude, delivery.longitude];
+                        
+                        // Add delivery point marker
+                        L.marker(point)
+                            .bindPopup(
+                                '<b>Package ID:</b> ' + delivery.packageId + '<br>' +
+                                '<b>Client:</b> ' + delivery.client + '<br>' +
+                                '<b>Address:</b> ' + delivery.address + '<br>' +
+                                '<b>Order:</b> ' + delivery.order + '<br>' +
+                                '<b>Planned Arrival:</b> ' + delivery.plannedArrival + '<br>' +
+                                '<b>Courier:</b> ' + delivery.courier
+                            )
+                            .addTo(map);
+                        
+                        // Add coordinates to route
+                        routeCoordinates.push(point);
+                        bounds.extend(point);
+                    });
+                    
+                    // Add final return to depot
+                    routeCoordinates.push(depotCoords);
+                    
+                    // Draw the complete route
+                    L.polyline(routeCoordinates, {
+                        color: courierColors[courier],
+                        weight: 3,
+                        opacity: 0.8
+                    }).addTo(map);
+                });
+
+                // Fit map to bounds
+                map.fitBounds(bounds, {padding: [50, 50]});
+            }
+        {% endif %}
+    </script>
 </body>
 </html>

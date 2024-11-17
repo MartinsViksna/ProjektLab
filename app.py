@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request, session
 from config import Config 
 from Solomon import SolomonVRP
 from flask_migrate import Migrate
@@ -190,7 +190,8 @@ def process_routes():
                     order=stop["order"],
                     route=stop["route"],
                     planned_arrival=stop.get("planned_arrival"),
-                    user_id=current_user.id
+                    user_id=current_user.id,
+                    depot = depot
                 )
                 db.session.add(created_route)
                 
@@ -202,33 +203,197 @@ def process_routes():
      
 
 # Logout route
-@app.route("/display_route", methods=["POST"])
+@app.route("/display_route", methods=["GET", "POST"])
 @login_required
 def display_route():
     try:
-        route_name = request.form['disproute']
-        if route_name:
-            disproute_names = db.session.query(CreatedRoutes.route).filter_by(user_id=current_user.id).distinct().all()
-            disproute_names = [route[0] for route in disproute_names]
-            created_routes = db.session.query(
-                CreatedRoutes.package_id,
-                CreatedRoutes.courier,
-                CreatedRoutes.order,
-                CreatedRoutes.planned_arrival,
-                Package.client,
-                Package.address,
-                Package.time_from,
-                Package.time_to
-            ).join(Package, CreatedRoutes.package_id == Package.package_id) \
-            .filter(Package.user_id == current_user.id) \
-            .order_by(CreatedRoutes.courier.asc(), CreatedRoutes.order.asc()) \
-            .all()
-            return render_template("display_route.html", created_routes=created_routes, disproutes =  disproute_names)
+        disproute_names = db.session.query(CreatedRoutes.route).filter_by(user_id=current_user.id).distinct().all()
+        disproute_names = [route[0] for route in disproute_names]
+        created_routes = []
+        if request.method == "POST":
+            route_name = request.form['disproute']
+            depot_info = CreatedRoutes.query.filter_by(
+                    user_id=current_user.id, 
+                    route=route_name
+                ).first()
+            depot_lat, depot_long = geocode_address(depot_info.depot, 0)
+            if route_name:
+                created_routes = db.session.query(
+                    CreatedRoutes.package_id,
+                    CreatedRoutes.courier,
+                    CreatedRoutes.order,
+                    CreatedRoutes.planned_arrival,
+                    CreatedRoutes.depot,
+                    Package.client,
+                    Package.address,
+                    Package.latitude,
+                    Package.longitude,
+                    Package.time_from,
+                    Package.time_to
+                ).join(Package, CreatedRoutes.package_id == Package.package_id) \
+                .filter(Package.user_id == current_user.id, CreatedRoutes.route == route_name) \
+                .order_by(CreatedRoutes.courier.asc(), CreatedRoutes.order.asc()) \
+                .all()
+                created_routes = [
+                        {
+                            'package_id': route.package_id,
+                            'courier': route.courier,
+                            'order': route.order,
+                            'planned_arrival': route.planned_arrival,
+                            'depot': route.depot,
+                            'depot_lat': depot_lat,
+                            'depot_long': depot_long,
+                            'client': route.client,
+                            'address': route.address,
+                            'latitude': route.latitude,
+                            'longitude': route.longitude,
+                            'time_from': route.time_from,
+                            'time_to': route.time_to
+                        } for route in created_routes
+                    ]
+        return render_template("display_route.html", created_routes=created_routes, disproutes =  disproute_names)
+                
+
 
     except Exception as e:
         flash(f"Error displaying routes: {e}", "danger")
         return redirect(url_for("dashboard"))
-    return redirect(url_for("dashboard"))
+    
+@app.route("/edit_packages", methods=["GET", "POST"])
+@login_required
+def edit_packages():
+    try:
+        disproute_names = db.session.query(Package.route).filter_by(user_id=current_user.id).distinct().all()
+        disproute_names = [route[0] for route in disproute_names]
+        last_selected_route = session.get('last_selected_route', None)
+        created_routes=[]
+        disp_package_id = []
+        if request.method == "POST":
+            route_name = request.form['disproute']
+            session['last_selected_route'] = route_name
+            last_selected_route = route_name
+            created_routes = Package.query.filter_by(user_id=current_user.id, route = route_name).all()
+            disp_package_id = db.session.query(Package.package_id).filter_by(user_id=current_user.id, route = route_name).distinct().all()
+            disp_package_id = [package[0] for package in disp_package_id]
+        elif last_selected_route:
+            created_routes = Package.query.filter_by(user_id=current_user.id, route=last_selected_route).all()
+            disp_package_id = db.session.query(Package.package_id).filter_by(user_id=current_user.id, route = last_selected_route).distinct().all()
+            disp_package_id = [package[0] for package in disp_package_id]
+        return render_template("edit_packages.html", disproutes = disproute_names, created_routes = created_routes , last_selected_route = last_selected_route, disp_package_id = disp_package_id)
+
+    except Exception as e:
+        flash(f"Error Retriving package: {e}", "danger")
+        return redirect(url_for("edit_packages"))
+    
+@app.route("/add_package", methods=["POST"])
+@login_required
+def add_package():
+    try:
+        if request.method == "POST":
+            package_id = request.form['package_id']
+            client = request.form['client']
+            address = request.form['address']
+            time_from = request.form['time_from']
+            time_to = request.form['time_to']
+            route_name = request.form['route']
+            latitude, longitude = geocode_address(address,0)
+            print(package_id,client,address,time_from,time_to, route_name, longitude, latitude)
+            new_package = Package(
+                        package_id=package_id,
+                        client=client,
+                        address=address,
+                        time_from=time_from,
+                        time_to=time_to,
+                        latitude=latitude,
+                        longitude=longitude,
+                        user_id=current_user.id,  # Associate package with the logged-in user
+                        route = route_name
+                    )
+            db.session.add(new_package)
+            db.session.commit()
+            session['last_selected_route'] = route_name
+            return redirect(url_for("edit_packages"))
+
+
+    except Exception as e:
+        flash(f"Error adding package: {e}", "danger")
+        return redirect(url_for("edit_packages"))
+    
+@app.route("/remove_package", methods=["POST"])
+@login_required
+def remove_package():
+    try:
+        if request.method == "POST":
+            package_id = request.form['disp_package']
+            route_name = request.form['route_id']
+            print(route_name, package_id)
+            Package.query.filter_by(route=route_name, user_id=current_user.id, package_id = package_id).delete()
+            db.session.commit()
+            session['last_selected_route'] = route_name
+            return redirect(url_for("edit_packages"))
+
+
+    except Exception as e:
+        flash(f"Error Removing package: {e}", "danger")
+        return redirect(url_for("edit_packages"))
+    
+@app.route("/update_package", methods=["POST"])
+@login_required
+def update_package():
+    try:
+        if request.method == "POST":
+            package_id = request.form.get('disp_package')
+            client = request.form.get('client') or None
+            address = request.form.get('address') or None
+            time_from = request.form.get('time_from') or None
+            time_to = request.form.get('time_to') or None
+            route_name = request.form.get('route') or None
+
+            # Only geocode if the address is provided
+            if address:
+                latitude, longitude = geocode_address(address, 0)
+            else:
+                latitude, longitude = None, None
+
+            print(package_id, client, address, time_from, time_to, route_name, longitude, latitude)
+
+            # Retrieve the package from the database if it already exists, or create a new one
+            package = Package.query.filter_by(package_id=package_id, user_id=current_user.id).first()
+            # New package associated with the current user
+
+            # Update only the fields that are present
+            if package_id is not None:
+                package.package_id = package_id
+            if client is not None:
+                package.client = client
+            if address is not None:
+                package.address = address
+            if time_from is not None:
+                package.time_from = time_from
+            if time_to is not None:
+                package.time_to = time_to
+            if latitude is not None and longitude is not None:
+                package.latitude = latitude
+                package.longitude = longitude
+            if route_name is not None:
+                package.route = route_name
+
+            # Add or update the package in the session and commit
+            db.session.add(package)
+            db.session.commit()
+
+            # Store last selected route in session if route_name was provided
+            if route_name:
+                session['last_selected_route'] = route_name
+
+        return redirect(url_for("edit_packages"))
+
+
+
+    except Exception as e:
+        flash(f"Error updating package: {e}", "danger")
+        return redirect(url_for("edit_packages"))
+
 
 @app.route("/logout", methods=["POST"])
 @login_required
