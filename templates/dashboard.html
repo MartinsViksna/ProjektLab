@@ -23,36 +23,36 @@
     
     <!-- CSV upload form -->
     <form method="POST" enctype="multipart/form-data">
-        <label for="csv_file">Choose CSV File: </label>
-        <input type="file" name="csv_file" accept=".csv" required><br><br>
-        <label for="csv_file">Choose Route Name: </label>
-        <input type="text" name="name"><br><br>
-        <button type="submit">Upload</button><br><br>
+        <label for="csv_file">Choose CSV File </label>
+        <input type="file" name="csv_file" accept=".csv" required><br>
+        <label for="csv_file">Choose Route Name </label>
+        <input type="text" name="name"><br>
+        <button type="submit">Upload</button><br>
     </form>
 
     <form action="{{ url_for('edit_packages') }}" method="GET">
-        <button type="submit">Edit Packages</button><br><br>
+        <button type="submit">Edit Packages</button><br>
     </form>
 
     <!-- Button to trigger processing of routes -->
 
     <form method="POST" action="{{ url_for('process_routes') }}">
-        <label for="route">Select Route: </label>
+        <label for="route">Select Route </label>
             <select name="route" required>
                 <option value="" disabled selected>Select a route</option>
                 {% for route in routes %}
                     <option value="{{ route }}">{{ route }}</option>
                 {% endfor %}
-            </select><br><br>
-        <label for="csv_file">Define Courier Count: </label>
-        <input type="text" name="couriers"><br><br>
-        <label for="csv_file">Define Depot Address: </label>
-        <input type="text" name="depot"><br><br>
-        <button type="submit">Process Routes</button> <br><br>
+            </select><br>
+        <label for="csv_file">Define Courier Count </label>
+        <input type="text" name="couriers"><br>
+        <label for="csv_file">Define Depot Address </label>
+        <input type="text" name="depot"><br>
+        <button type="submit">Process Routes</button> <br>
     </form>
 
     <form method="GET" action="{{ url_for('display_route') }}">
-        <button type="submit">Display Routes</button><br><br>
+        <button type="submit">Display Routes</button><br>
     </form>
 
     

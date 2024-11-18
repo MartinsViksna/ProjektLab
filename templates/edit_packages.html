@@ -9,14 +9,14 @@
 <body>
     
     <form method="POST" action="{{ url_for('edit_packages') }}">
-        <label for="disproute">Select Route: </label>
+        <label for="disproute">Select Route </label>
             <select name="disproute" required>
                 <option value="" disabled selected>Select a route</option>
                 {% for disproute in disproutes %}
                     <option value="{{ disproute }}">{{ disproute }}</option>
                 {% endfor %}
-            </select><br><br>
-        <button type="submit">Display Packages</button> <br><br>
+            </select><br>
+        <button type="submit">Display Packages</button> <br>
     </form>
 
 
@@ -48,53 +48,62 @@
     {% else %}
         <p>No routes available for the selected route.</p>
     {% endif %}
-    <br><br>
+    <br>
 
     <form action="{{ url_for('add_package') }}" method="POST">
-        <label>PACKAGE ID : CLIENT :  ADDRESS: TIME FROM : TIME TO : ROUTE NAME : </label><br><br>
+        <label>PACKAGE ID</label>
         <input type="text" name="package_id">
+        <label>CLIENT</label>
         <input type="text" name="client">
+        <label>ADDRESS</label>
         <input type="text" name="address">
+        <label>TIME FROM</label>
         <input type="text" name="time_from">
+        <label>TIME TO</label>
         <input type="text" name="time_to">
-        <input type="text" name="route"><br><br>
-        <button type="submit">ADD Package</button><br><br>
+        <label>ROUTE NAME</label>
+        <input type="text" name="route"><br>
+        <button type="submit">ADD Package</button><br>
     </form> 
 
     <form method="POST" action="{{ url_for('remove_package') }}">
         <input type="hidden" name="route_id" value="{{last_selected_route}}">
-        <label for="disp_package">Select Package: </label>
+        <label for="disp_package">Select Package </label>
             <select name="disp_package" required>
                 <option value="" disabled selected>Select a Package</option>
                 {% for disp_package in disp_package_id %}
                     <option value="{{ disp_package }}">{{ disp_package }}</option>
                 {% endfor %}
-            </select><br><br>
-        <button type="submit">Delete Package</button> <br><br>
+            </select><br>
+        <button type="submit">Delete Package</button> <br>
     </form>
 
     <form method="POST" action="{{ url_for('update_package') }}">
         <input type="hidden" name="route_id" value="{{last_selected_route}}">
-        <label for="disp_package">Select Package: </label>
+        <label for="disp_package">Select Package </label>
             <select name="disp_package" required>
                 <option value="" disabled selected>Select a Package</option>
                 {% for disp_package in disp_package_id %}
                     <option value="{{ disp_package }}">{{ disp_package }}</option>
                 {% endfor %}
-            </select><br><br>
-        <label> CLIENT :  ADDRESS: TIME FROM : TIME TO : ROUTE NAME : </label><br><br>
+            </select><br>
+        <label>CLIENT</label>
         <input type="text" name="client">
+        <label>ADDRESS</label>
         <input type="text" name="address">
+        <label>TIME FROM</label>
         <input type="text" name="time_from">
+        <label>TIME TO</label>
         <input type="text" name="time_to">
-        <input type="text" name="route"><br><br>
-        <button type="submit">Update Package</button> <br><br>
+        <label>ROUTE NAME</label>
+        <input type="text" name="route"><br>
+        <button type="submit">Update Package</button> <br>
     </form>
 
     <form action="{{ url_for('dashboard') }}" method="GET">
         <button type="submit">Dashboard</button>
     </form>
-    <br><br>
+    <br>
     <!-- Logout button -->
     <form action="{{ url_for('logout') }}" method="POST">
         <button type="submit">Logout</button>
