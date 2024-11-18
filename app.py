@@ -7,7 +7,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from geopy.geocoders import Nominatim
 import pandas as pd
 from datetime import datetime
-from models.route import Package, CreatedRoutes
+from models.route import Package, CreatedRoutes, User
 
 app = Flask(__name__)
 app.config.from_object(Config)
