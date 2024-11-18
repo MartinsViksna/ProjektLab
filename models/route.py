@@ -1,5 +1,5 @@
 from extensions import db
-
+from flask_login import UserMixin
 class Package(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     package_id = db.Column(db.String(50), nullable=False)
@@ -21,4 +21,11 @@ class CreatedRoutes(db.Model):
     planned_arrival = db.Column(db.Integer)
     depot = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    def __repr__(self):
+        return f"<User {self.username}>"
 

@@ -3,7 +3,7 @@ from config import Config
 from Solomon import SolomonVRP
 from flask_migrate import Migrate
 from extensions import db
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from geopy.geocoders import Nominatim
 import pandas as pd
 from datetime import datetime
@@ -16,12 +16,6 @@ login_manager = LoginManager(app)
 login_manager.login_view = "login" 
 routes = []
 
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-    def __repr__(self):
-        return f"<User {self.username}>"
 
 db.init_app(app)
 migrate = Migrate(app, db)
