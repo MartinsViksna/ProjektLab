@@ -7,63 +7,86 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>Welcome to your dashboard, {{ current_user.username }}!</h1>
-    <h1>Upload CSV File with Package Information</h1>
-    
-    <!-- Flash message for success or error -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <ul>
-        {% for category, message in messages %}
-            <li class="{{ category }}">{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% endwith %}
-    
-    <!-- CSV upload form -->
-    <form method="POST" enctype="multipart/form-data">
-        <label for="csv_file">Choose CSV File </label>
-        <input type="file" name="csv_file" accept=".csv" required><br>
-        <label for="csv_file">Choose Route Name </label>
-        <input type="text" name="name"><br>
-        <button type="submit">Upload</button><br>
-    </form>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <header>
+            <h1 class="welcome-message">Welcome, {{ current_user.username }}!</h1>
+            <form action="{{ url_for('logout') }}" method="POST" class="logout-form">
+                <button type="submit" class="danger-button">Logout</button>
+            </form>
+        </header>
 
-    <form action="{{ url_for('edit_packages') }}" method="GET">
-        <button type="submit">Edit Packages</button><br>
-    </form>
-
-    <!-- Button to trigger processing of routes -->
-
-    <form method="POST" action="{{ url_for('process_routes') }}">
-        <label for="route">Select Route </label>
-            <select name="route" required>
-                <option value="" disabled selected>Select a route</option>
-                {% for route in routes %}
-                    <option value="{{ route }}">{{ route }}</option>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
                 {% endfor %}
-            </select><br>
-        <label for="csv_file">Define Courier Count </label>
-        <input type="text" name="couriers"><br>
-        <label for="csv_file">Define Depot Address </label>
-        <input type="text" name="depot"><br>
-        <button type="submit">Process Routes</button> <br>
-    </form>
+            </div>
+        {% endif %}
+        {% endwith %}
 
-    <form method="GET" action="{{ url_for('display_route') }}">
-        <button type="submit">Display Routes</button><br>
-    </form>
+        <!-- Main Content Grid -->
+        <div class="dashboard-grid">
+            <!-- CSV Upload Section -->
+            <section class="dashboard-card">
+                <h2>Upload Route Data</h2>
+                <form method="POST" enctype="multipart/form-data" class="upload-form">
+                    <div class="form-group">
+                        <div class="file-input-wrapper">
+                            <label for="csv_file">Choose CSV File</label>
+                            <button class="custom-file-button">Choose File</button>
+                            <input type="file" name="csv_file" accept=".csv" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Route Name</label>
+                        <input type="text" name="name" placeholder="Enter route name">
+                    </div>
+                    <button type="submit" class="primary-button">Upload CSV</button>
+                </form>
+            </section>
 
-    
+            <!-- Route Processing Section -->
+            <section class="dashboard-card">
+                <h2>Process Routes</h2>
+                <form method="POST" action="{{ url_for('process_routes') }}" class="process-form">
+                    <div class="form-group">
+                        <label for="route">Select Route</label>
+                        <select name="route" required>
+                            <option value="" disabled selected>Choose a route</option>
+                            {% for route in routes %}
+                                <option value="{{ route }}">{{ route }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="couriers">Number of Couriers</label>
+                        <input type="text" name="couriers" placeholder="Enter courier count">
+                    </div>
+                    <div class="form-group">
+                        <label for="depot">Depot Address</label>
+                        <input type="text" name="depot" placeholder="Enter depot address">
+                    </div>
+                    <button type="submit" class="primary-button">Process Routes</button>
+                </form>
+            </section>
 
+            <!-- Quick Actions Section -->
+            <section class="dashboard-card quick-actions">
+                <h2>Quick Actions</h2>
+                <div class="button-group">
+                    <form action="{{ url_for('edit_packages') }}" method="GET">
+                        <button type="submit" class="primary-button">Edit Packages</button>
+                    </form>
+                    <form method="GET" action="{{ url_for('display_route') }}">
+                        <button type="submit" class="primary-button">Display Routes</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
 
-
-    <!-- Logout button -->
-    <form action="{{ url_for('logout') }}" method="POST">
-        <button type="submit">Logout</button>
-    </form>
-
-    
 </body>
 </html>

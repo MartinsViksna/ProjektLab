@@ -31,62 +31,82 @@
     </style>
 </head>
 <body>
-    <form method="POST" action="{{ url_for('display_route') }}">
-        <label for="disproute">Select Route: </label>
-        <select name="disproute" required>
-            <option value="" disabled selected>Select a route</option>
-            {% for disproute in disproutes %}
-                <option value="{{ disproute }}">{{ disproute }}</option>
-            {% endfor %}
-        </select><br><br>
-        <button type="submit">Display Route</button><br><br>
-    </form>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <header>
+            <h1 class="welcome-message">Route Visualization</h1>
+            <div class="header-actions">
+                <form action="{{ url_for('dashboard') }}" class="header-form">
+                    <button type="submit" class="secondary-button">Back to Dashboard</button>
+                </form>
+                <form action="{{ url_for('logout') }}" method="POST" class="header-form">
+                    <button type="submit" class="danger-button">Logout</button>
+                </form>
+            </div>
+        </header>
 
-    {% if created_routes %}
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Package ID</th>
-                    <th>Client</th>
-                    <th>Address</th>
-                    <th>Time From</th>
-                    <th>Time To</th>
-                    <th>Planned Arrival</th>
-                    <th>Courier</th>
-                    <th>Order</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for route in created_routes %}
-                <tr>
-                    <td>{{ route.package_id }}</td>
-                    <td>{{ route.client }}</td>
-                    <td>{{ route.address }}</td>
-                    <td>{{ route.time_from }}</td>
-                    <td>{{ route.time_to }}</td>
-                    <td>{{ route.planned_arrival }}</td>
-                    <td>{{ route.courier }}</td>
-                    <td>{{ route.order }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No routes available for the selected route.</p>
-    {% endif %}
+        <!-- Route Selection Section -->
+        <section class="dashboard-card">
+            <h2>Select Route to Display</h2>
+            <form method="POST" action="{{ url_for('display_route') }}" class="route-select-form">
+                <div class="form-group">
+                    <label for="disproute">Route Name</label>
+                    <select name="disproute" required>
+                        <option value="" disabled selected>Select a route</option>
+                        {% for disproute in disproutes %}
+                            <option value="{{ disproute }}">{{ disproute }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="primary-button">Display Route</button>
+            </form>
+        </section>
 
-    <br><br>
-    <form action="{{ url_for('dashboard') }}">
-        <button type="submit">Dashboard</button>
-    </form>
-    <br><br>
-    <h3>Route Deliveries Visualization</h3>
-    <div id="map"></div>
+        <!-- Map Section -->
+        <section class="dashboard-card map-section">
+            <h2>Route Map Visualization</h2>
+            <div id="map"></div>
+        </section>
 
-    
-    <form action="{{ url_for('logout') }}" method="POST">
-        <button type="submit">Logout</button>
-    </form>
+        <!-- Route Details Table -->
+        <section class="dashboard-card">
+            <h2>Delivery Schedule</h2>
+            {% if created_routes %}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Package ID</th>
+                                <th>Client</th>
+                                <th>Address</th>
+                                <th>Time From</th>
+                                <th>Time To</th>
+                                <th>Planned Arrival</th>
+                                <th>Courier</th>
+                                <th>Order</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for route in created_routes %}
+                            <tr>
+                                <td>{{ route.package_id }}</td>
+                                <td>{{ route.client }}</td>
+                                <td>{{ route.address }}</td>
+                                <td>{{ route.time_from }}</td>
+                                <td>{{ route.time_to }}</td>
+                                <td>{{ route.planned_arrival }}</td>
+                                <td>{{ route.courier }}</td>
+                                <td>{{ route.order }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-state">No routes available for the selected route.</p>
+            {% endif %}
+        </section>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
@@ -121,7 +141,12 @@
 
             // Generate colors for couriers
             var uniqueCouriers = [...new Set(routesData.map(route => route.courier))];
-            var colors = ['#FF0000', '#0000FF', '#008000', '#FFA500', '#800080', '#00FFFF', '#FF00FF', '#FFD700'];
+            var colors = [
+                '#FF0000', '#0000FF', '#008000', '#FFA500', '#800080', '#00FFFF', '#FF00FF', '#FFD700', // Original colors
+                '#A52A2A', '#5F9EA0', '#D2691E', '#FF7F50', '#6495ED', '#DC143C', '#00FA9A', '#8A2BE2', // Additional colors
+                '#FF1493', '#1E90FF', '#FF6347', '#32CD32', '#4B0082', '#708090', '#2E8B57', '#9ACD32', // Additional colors
+                '#8B4513', '#BDB76B', '#556B2F', '#7FFF00', '#DDA0DD', '#E9967A', '#FF4500', '#FFDAB9'  // Additional colors
+                ];
             var courierColors = {};
             uniqueCouriers.forEach((courier, index) => {
                 courierColors[courier] = colors[index % colors.length];

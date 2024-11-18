@@ -213,11 +213,13 @@ def display_route():
             depot_lat, depot_long = geocode_address(depot_info.depot, 0)
             if route_name:
                 created_routes = db.session.query(
+                    CreatedRoutes.route,
                     CreatedRoutes.package_id,
                     CreatedRoutes.courier,
                     CreatedRoutes.order,
                     CreatedRoutes.planned_arrival,
                     CreatedRoutes.depot,
+                    Package.route,
                     Package.client,
                     Package.address,
                     Package.latitude,
@@ -225,7 +227,7 @@ def display_route():
                     Package.time_from,
                     Package.time_to
                 ).join(Package, CreatedRoutes.package_id == Package.package_id) \
-                .filter(Package.user_id == current_user.id, CreatedRoutes.route == route_name) \
+                .filter(Package.user_id == current_user.id, CreatedRoutes.user_id == current_user.id , CreatedRoutes.route == route_name, Package.route == route_name) \
                 .order_by(CreatedRoutes.courier.asc(), CreatedRoutes.order.asc()) \
                 .all()
                 created_routes = [

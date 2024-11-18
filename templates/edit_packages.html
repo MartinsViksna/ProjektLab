@@ -7,108 +7,162 @@
     <title>Edit Packages</title>
 </head>
 <body>
-    
-    <form method="POST" action="{{ url_for('edit_packages') }}">
-        <label for="disproute">Select Route </label>
-            <select name="disproute" required>
-                <option value="" disabled selected>Select a route</option>
-                {% for disproute in disproutes %}
-                    <option value="{{ disproute }}">{{ disproute }}</option>
-                {% endfor %}
-            </select><br>
-        <button type="submit">Display Packages</button> <br>
-    </form>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <header>
+            <h1 class="welcome-message">Edit Packages</h1>
+            <div class="header-actions">
+                <form action="{{ url_for('dashboard') }}" method="GET" class="header-form">
+                    <button type="submit" class="secondary-button">Back to Dashboard</button>
+                </form>
+                <form action="{{ url_for('logout') }}" method="POST" class="header-form">
+                    <button type="submit" class="danger-button">Logout</button>
+                </form>
+            </div>
+        </header>
 
+        <!-- Route Selection Section -->
+        <section class="dashboard-card">
+            <h2>Select Route</h2>
+            <form method="POST" action="{{ url_for('edit_packages') }}" class="route-select-form">
+                <div class="form-group">
+                    <label for="disproute">Route Name</label>
+                    <select name="disproute" required>
+                        <option value="" disabled selected>Select a route</option>
+                        {% for disproute in disproutes %}
+                            <option value="{{ disproute }}">{{ disproute }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="primary-button">Display Packages</button>
+            </form>
+        </section>
 
-    {% if created_routes %}
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Package ID</th>
-                    <th>Client</th>
-                    <th>Address</th>
-                    <th>Time From</th>
-                    <th>Time To</th>
-                    <th>Route</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for route in created_routes %}
-                <tr>
-                    <td>{{ route.package_id }}</td>
-                    <td>{{ route.client }}</td>
-                    <td>{{ route.address }}</td>
-                    <td>{{ route.time_from }}</td>
-                    <td>{{ route.time_to }}</td>
-                    <td>{{ route.route }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No routes available for the selected route.</p>
-    {% endif %}
-    <br>
+        <!-- Packages Table Section -->
+        <section class="dashboard-card">
+            <h2>Package List</h2>
+            {% if created_routes %}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Package ID</th>
+                                <th>Client</th>
+                                <th>Address</th>
+                                <th>Time From</th>
+                                <th>Time To</th>
+                                <th>Route</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for route in created_routes %}
+                            <tr>
+                                <td>{{ route.package_id }}</td>
+                                <td>{{ route.client }}</td>
+                                <td>{{ route.address }}</td>
+                                <td>{{ route.time_from }}</td>
+                                <td>{{ route.time_to }}</td>
+                                <td>{{ route.route }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-state">No routes available for the selected route.</p>
+            {% endif %}
+        </section>
 
-    <form action="{{ url_for('add_package') }}" method="POST">
-        <label>PACKAGE ID</label>
-        <input type="text" name="package_id">
-        <label>CLIENT</label>
-        <input type="text" name="client">
-        <label>ADDRESS</label>
-        <input type="text" name="address">
-        <label>TIME FROM</label>
-        <input type="text" name="time_from">
-        <label>TIME TO</label>
-        <input type="text" name="time_to">
-        <label>ROUTE NAME</label>
-        <input type="text" name="route"><br>
-        <button type="submit">ADD Package</button><br>
-    </form> 
+        <!-- Package Management Grid -->
+        <div class="dashboard-grid">
+            <!-- Add Package Section -->
+            <section class="dashboard-card">
+                <h2>Add New Package</h2>
+                <form action="{{ url_for('add_package') }}" method="POST" class="package-form">
+                    <div class="form-group">
+                        <label>Package ID</label>
+                        <input type="text" name="package_id" placeholder="Enter package ID">
+                    </div>
+                    <div class="form-group">
+                        <label>Client</label>
+                        <input type="text" name="client" placeholder="Enter client name">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" name="address" placeholder="Enter delivery address">
+                    </div>
+                    <div class="form-group">
+                        <label>Time From</label>
+                        <input type="text" name="time_from" placeholder="Enter start time">
+                    </div>
+                    <div class="form-group">
+                        <label>Time To</label>
+                        <input type="text" name="time_to" placeholder="Enter end time">
+                    </div>
+                    <div class="form-group">
+                        <label>Route Name</label>
+                        <input type="text" name="route" placeholder="Enter route name">
+                    </div>
+                    <button type="submit" class="primary-button">Add Package</button>
+                </form>
+            </section>
 
-    <form method="POST" action="{{ url_for('remove_package') }}">
-        <input type="hidden" name="route_id" value="{{last_selected_route}}">
-        <label for="disp_package">Select Package </label>
-            <select name="disp_package" required>
-                <option value="" disabled selected>Select a Package</option>
-                {% for disp_package in disp_package_id %}
-                    <option value="{{ disp_package }}">{{ disp_package }}</option>
-                {% endfor %}
-            </select><br>
-        <button type="submit">Delete Package</button> <br>
-    </form>
+            <!-- Update Package Section -->
+            <section class="dashboard-card">
+                <h2>Update Package</h2>
+                <form method="POST" action="{{ url_for('update_package') }}" class="package-form">
+                    <input type="hidden" name="route_id" value="{{last_selected_route}}">
+                    <div class="form-group">
+                        <label for="disp_package">Select Package</label>
+                        <select name="disp_package" required>
+                            <option value="" disabled selected>Select a Package</option>
+                            {% for disp_package in disp_package_id %}
+                                <option value="{{ disp_package }}">{{ disp_package }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Client</label>
+                        <input type="text" name="client" placeholder="Update client name">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" name="address" placeholder="Update address">
+                    </div>
+                    <div class="form-group">
+                        <label>Time From</label>
+                        <input type="text" name="time_from" placeholder="Update start time">
+                    </div>
+                    <div class="form-group">
+                        <label>Time To</label>
+                        <input type="text" name="time_to" placeholder="Update end time">
+                    </div>
+                    <div class="form-group">
+                        <label>Route Name</label>
+                        <input type="text" name="route" placeholder="Update route name">
+                    </div>
+                    <button type="submit" class="primary-button">Update Package</button>
+                </form>
+            </section>
 
-    <form method="POST" action="{{ url_for('update_package') }}">
-        <input type="hidden" name="route_id" value="{{last_selected_route}}">
-        <label for="disp_package">Select Package </label>
-            <select name="disp_package" required>
-                <option value="" disabled selected>Select a Package</option>
-                {% for disp_package in disp_package_id %}
-                    <option value="{{ disp_package }}">{{ disp_package }}</option>
-                {% endfor %}
-            </select><br>
-        <label>CLIENT</label>
-        <input type="text" name="client">
-        <label>ADDRESS</label>
-        <input type="text" name="address">
-        <label>TIME FROM</label>
-        <input type="text" name="time_from">
-        <label>TIME TO</label>
-        <input type="text" name="time_to">
-        <label>ROUTE NAME</label>
-        <input type="text" name="route"><br>
-        <button type="submit">Update Package</button> <br>
-    </form>
-
-    <form action="{{ url_for('dashboard') }}" method="GET">
-        <button type="submit">Dashboard</button>
-    </form>
-    <br>
-    <!-- Logout button -->
-    <form action="{{ url_for('logout') }}" method="POST">
-        <button type="submit">Logout</button>
-    </form>
-
-    
+            <!-- Delete Package Section -->
+            <section class="dashboard-card">
+                <h2>Remove Package</h2>
+                <form method="POST" action="{{ url_for('remove_package') }}" class="package-form">
+                    <input type="hidden" name="route_id" value="{{last_selected_route}}">
+                    <div class="form-group">
+                        <label for="disp_package">Select Package</label>
+                        <select name="disp_package" required>
+                            <option value="" disabled selected>Select a Package</option>
+                            {% for disp_package in disp_package_id %}
+                                <option value="{{ disp_package }}">{{ disp_package }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="danger-button">Delete Package</button>
+                </form>
+            </section>
+        </div>
+    </div>
 </body>
 </html>
