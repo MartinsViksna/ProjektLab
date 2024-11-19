@@ -8,6 +8,7 @@ from geopy.geocoders import Nominatim
 import pandas as pd
 from datetime import datetime
 from models.route import Package, CreatedRoutes, User
+from waitress import serve
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -143,9 +144,7 @@ def process_routes():
         depot = request.form['depot']
         route_name = request.form['route']
         depot_lat,depot_long = geocode_address(depot,0)
-        print(couriers,depot, depot_lat, depot_long)
         deliveries = Package.query.filter_by(user_id=current_user.id, route=route_name).all()
-        print(deliveries)
 
         # Prepare the data for VRP solver
         delivery_data = pd.DataFrame([{
@@ -159,7 +158,6 @@ def process_routes():
         } for d in deliveries])
 
         # Create and solve the VRP
-        print(route_name)
         vrp_solver = SolomonVRP(
             delivery_data, 
             couriers, 
@@ -293,7 +291,6 @@ def add_package():
             time_to = request.form['time_to']
             route_name = request.form['route']
             latitude, longitude = geocode_address(address,0)
-            print(package_id,client,address,time_from,time_to, route_name, longitude, latitude)
             new_package = Package(
                         package_id=package_id,
                         client=client,
@@ -322,7 +319,6 @@ def remove_package():
         if request.method == "POST":
             package_id = request.form['disp_package']
             route_name = request.form['route_id']
-            print(route_name, package_id)
             Package.query.filter_by(route=route_name, user_id=current_user.id, package_id = package_id).delete()
             db.session.commit()
             session['last_selected_route'] = route_name
@@ -351,7 +347,6 @@ def update_package():
             else:
                 latitude, longitude = None, None
 
-            print(package_id, client, address, time_from, time_to, route_name, longitude, latitude)
 
             # Retrieve the package from the database if it already exists, or create a new one
             package = Package.query.filter_by(package_id=package_id, user_id=current_user.id).first()
@@ -400,4 +395,4 @@ def logout():
 
 # Run the app
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=80)
+    serve(app, host='0.0.0.0', port=80)
