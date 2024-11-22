@@ -284,6 +284,7 @@ def edit_packages():
 def add_package():
     try:
         if request.method == "POST":
+            
             package_id = request.form['package_id']
             client = request.form['client']
             address = request.form['address']
@@ -291,6 +292,14 @@ def add_package():
             time_to = request.form['time_to']
             route_name = request.form['route']
             latitude, longitude = geocode_address(address,0)
+            existing_package = Package.query.filter_by(
+                package_id=package_id,
+                route=route_name,
+                user_id=current_user.id
+            ).first()
+            if existing_package:
+                flash("Package already exists with this ID and route.", "danger")
+                return redirect(url_for("edit_packages"))
             new_package = Package(
                         package_id=package_id,
                         client=client,
