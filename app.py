@@ -94,11 +94,11 @@ def dashboard():
                 # Iterate over each row in the dataframe
                 for index, row in df.iterrows():
                     # Extract data from CSV row
-                    package_id = row["package id"]
+                    package_id = row["packageID"]
                     client = row["Client"]
                     address = row["Address"]
-                    time_from = row["Time from"]
-                    time_to = row["Time to"]
+                    time_from = row["TimeFrom"]
+                    time_to = row["TimeTo"]
                     
                     # Geocode the address
                     latitude, longitude = geocode_address(address,0)

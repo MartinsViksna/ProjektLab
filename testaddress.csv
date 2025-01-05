@@ -1,4 +1,4 @@
-package id,Client,Address,Time from,Time to
+packageID,Client,Address,TimeFrom,TimeTo
 1,test1,"azenes iela 1, riga",10:00,11:00
 2,test2,"azenes iela 2, riga",11:00,12:00
 3,test3,"azenes iela 3, riga",12:00,13:00

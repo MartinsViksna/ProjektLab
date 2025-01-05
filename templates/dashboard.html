@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='dashstyle.css') }}">
     <title>Dashboard</title>
+    <script>
+        function validateCSV(event) {
+            const requiredHeaders = ["packageID", "Client", "Address", "TimeFrom", "TimeTo"];
+            const fileInput = document.querySelector('input[name="csv_file"]');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file.");
+                event.preventDefault();
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const lines = content.split('\n');
+                const headers = lines[0].split(',').map(header => header.trim());
+
+                const missingHeaders = requiredHeaders.filter(header => !headers.includes(header));
+                if (missingHeaders.length > 0) {
+                    alert("The file is missing the following required headers: " + missingHeaders.join(', '));
+                    event.preventDefault();
+                } else {
+                    document.querySelector('.upload-form').submit();
+                }
+            };
+
+            reader.readAsText(file);
+            event.preventDefault(); // Prevent the default form submission to validate asynchronously
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.upload-form');
+            form.addEventListener('submit', validateCSV);
+        });
+
+    </script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -86,6 +123,5 @@
             </section>
         </div>
     </div>
-
 </body>
 </html>
