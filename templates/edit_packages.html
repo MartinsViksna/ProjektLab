@@ -172,6 +172,25 @@
                     <button type="submit" class="danger-button">Delete Package</button>
                 </form>
             </section>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    // Function to validate HH:MM format
+                    function validateTimeInput(inputElement) {
+                        const timeFormat = /^([01]\d|2[0-3]):([0-5]\d)$/; // Regular expression for HH:MM
+                        inputElement.addEventListener('input', function() {
+                            if (!timeFormat.test(inputElement.value)) {
+                                inputElement.setCustomValidity("Please enter time in HH:MM format.");
+                            } else {
+                                inputElement.setCustomValidity("");
+                            }
+                        });
+                    }
+
+                    // Apply validation to all time fields
+                    const timeFields = document.querySelectorAll("input[name='time_from'], input[name='time_to']");
+                    timeFields.forEach(validateTimeInput);
+                });
+            </script>
         </div>
     </div>
 </body>
