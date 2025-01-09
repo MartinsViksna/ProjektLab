@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from extensions import db
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut, GeocoderServiceError
+import time
 import pandas as pd
 from datetime import datetime
 from models.route import Package, CreatedRoutes, User
@@ -12,7 +14,10 @@ from waitress import serve
 
 app = Flask(__name__)
 app.config.from_object(Config)
-geolocator = Nominatim(user_agent="geoapp")
+geolocator = Nominatim(
+    user_agent="geoapp",
+    timeout=20  # Increase timeout to 10 seconds
+)
 login_manager = LoginManager(app)
 login_manager.login_view = "login" 
 routes = []
@@ -25,13 +30,29 @@ with app.app_context():
     db.create_all()
 
 
-def geocode_address(address,retry):
-    location = geolocator.geocode(address)
-    if location:
-        return location.latitude, location.longitude
-    elif retry<=10:
-        geocode_address(address, retry+1)
-    else: return None, None
+def geocode_address(address, retry=0):
+    """
+    Geocode an address with retry logic and delay between attempts
+    """
+    if retry > 50:  # Limit retries to 3 attempts
+        return None, None
+        
+    try:
+        # Add delay between requests to avoid rate limiting
+        time.sleep(1)
+        
+        location = geolocator.geocode(address)
+        if location:
+            return location.latitude, location.longitude
+        return None, None
+        
+    except (GeocoderTimedOut, GeocoderServiceError):
+        # Exponential backoff between retries
+        time.sleep(min(2 ** retry, 5))
+        return geocode_address(address, retry + 1)
+    except Exception as e:
+        print(f"Geocoding error for {address}: {str(e)}")
+        return None, None
 
 # User loader function for Flask-Login
 @login_manager.user_loader
@@ -48,7 +69,7 @@ def register():
         password = request.form["password"]
         # Check if username already exists
         existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
+        if (existing_user):
             flash("Username already exists. Please choose another.", "danger")
             return redirect(url_for("register"))
         
@@ -233,7 +254,7 @@ def display_route():
                             'package_id': route.package_id,
                             'courier': route.courier,
                             'order': route.order,
-                            'planned_arrival': route.planned_arrival,
+                            'planned_arrival': minutes_to_time(route.planned_arrival),
                             'depot': route.depot,
                             'depot_lat': depot_lat,
                             'depot_long': depot_long,
@@ -402,6 +423,15 @@ def logout():
     flash("You have been logged out.", "success")
     return redirect(url_for("login"))
 
+# Add this helper function
+def minutes_to_time(minutes):
+    if minutes is None:
+        return None
+    hours = minutes // 60
+    mins = minutes % 60
+    return f"{hours:02d}:{mins:02d}"
+
+    
 # Run the app
 if __name__ == "__main__":
     serve(app, host='0.0.0.0', port=80)

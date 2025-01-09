@@ -50,7 +50,7 @@ class SolomonVRP:
         
         # Convert distance to minutes assuming average speed of 30 km/h
         # Add a small buffer to ensure feasibility
-        minutes = (distance / 70) * 60
+        minutes = (distance / 60) * 60
         return int(minutes + 5)  # Add 5 minutes buffer for traffic/stops
     
     def _create_time_matrix(self):
@@ -193,7 +193,7 @@ class SolomonVRP:
             search_parameters.local_search_metaheuristic = (
                 routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
             )
-            search_parameters.time_limit.FromSeconds(30)
+            search_parameters.time_limit.FromSeconds(90)
             
             # Solve the problem
             solution = routing.SolveWithParameters(search_parameters)
@@ -228,7 +228,7 @@ class SolomonVRP:
                     
                     route.append({
                         "package_id": self.deliveries.iloc[delivery_idx]['package_id'],
-                        "courier": vehicle_id + 1,
+                        "courier": vehicle_id,  # Ensure sequential courier IDs
                         "order": len(route) + 1,
                         "route": self.route_name,
                         "planned_arrival": planned_arrival
@@ -247,7 +247,7 @@ class SolomonVRP:
             issues = []
             
             # Check if we have enough vehicles
-            min_vehicles_needed = len(self.deliveries) // 20 + 1  # Assume max 20 deliveries per vehicle
+            min_vehicles_needed = len(self.deliveries) // 100 + 1  # Assume max 20 deliveries per vehicle
             if self.num_vehicles < min_vehicles_needed:
                 issues.append(f"Warning: May need more vehicles. Have {self.num_vehicles}, recommend at least {min_vehicles_needed}")
             

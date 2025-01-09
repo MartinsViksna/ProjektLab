@@ -1,0 +1,151 @@
+packageID,Client,Address,TimeFrom,TimeTo
+1,test1,"Brīvības iela 1, Rīga",08:00,09:00
+2,test2,"Lāčplēša iela 2, Rīga",09:00,10:00
+3,test3,"Krišjāņa Barona iela 3, Rīga",10:00,11:00
+4,test4,"Elizabetes iela 4, Rīga",11:00,12:00
+5,test5,"Dzirnavu iela 5, Rīga",12:00,13:00
+6,test6,"Stabu iela 6, Rīga",13:00,14:00
+7,test7,"Brīvības iela 7, Rīga",14:00,15:00
+8,test8,"Lāčplēša iela 8, Rīga",15:00,16:00
+9,test9,"Krišjāņa Barona iela 9, Rīga",16:00,17:00
+10,test10,"Elizabetes iela 10, Rīga",17:00,18:00
+11,test11,"Dzirnavu iela 11, Rīga",08:00,09:00
+12,test12,"Stabu iela 12, Rīga",09:00,10:00
+13,test13,"Brīvības iela 13, Rīga",10:00,11:00
+14,test14,"Lāčplēša iela 14, Rīga",11:00,12:00
+15,test15,"Krišjāņa Barona iela 15, Rīga",12:00,13:00
+16,test16,"Elizabetes iela 16, Rīga",13:00,14:00
+17,test17,"Dzirnavu iela 17, Rīga",14:00,15:00
+18,test18,"Stabu iela 18, Rīga",15:00,16:00
+19,test19,"Brīvības iela 19, Rīga",16:00,17:00
+20,test20,"Lāčplēša iela 20, Rīga",17:00,18:00
+21,test21,"Krišjāņa Barona iela 21, Rīga",08:00,09:00
+22,test22,"Elizabetes iela 22, Rīga",09:00,10:00
+23,test23,"Dzirnavu iela 23, Rīga",10:00,11:00
+24,test24,"Stabu iela 24, Rīga",11:00,12:00
+25,test25,"Brīvības iela 25, Rīga",12:00,13:00
+26,test26,"Lāčplēša iela 26, Rīga",13:00,14:00
+27,test27,"Krišjāņa Barona iela 27, Rīga",14:00,15:00
+28,test28,"Elizabetes iela 28, Rīga",15:00,16:00
+29,test29,"Dzirnavu iela 29, Rīga",16:00,17:00
+30,test30,"Stabu iela 30, Rīga",17:00,18:00
+31,test31,"Brīvības iela 31, Rīga",08:00,09:00
+32,test32,"Lāčplēša iela 32, Rīga",09:00,10:00
+33,test33,"Krišjāņa Barona iela 33, Rīga",10:00,11:00
+34,test34,"Elizabetes iela 34, Rīga",11:00,12:00
+35,test35,"Dzirnavu iela 35, Rīga",12:00,13:00
+36,test36,"Stabu iela 36, Rīga",13:00,14:00
+37,test37,"Brīvības iela 37, Rīga",14:00,15:00
+38,test38,"Lāčplēša iela 38, Rīga",15:00,16:00
+39,test39,"Krišjāņa Barona iela 39, Rīga",16:00,17:00
+40,test40,"Elizabetes iela 40, Rīga",17:00,18:00
+41,test41,"Dzirnavu iela 41, Rīga",08:00,09:00
+42,test42,"Stabu iela 42, Rīga",09:00,10:00
+43,test43,"Brīvības iela 43, Rīga",10:00,11:00
+44,test44,"Lāčplēša iela 44, Rīga",11:00,12:00
+45,test45,"Krišjāņa Barona iela 45, Rīga",12:00,13:00
+46,test46,"Elizabetes iela 46, Rīga",13:00,14:00
+47,test47,"Dzirnavu iela 47, Rīga",14:00,15:00
+48,test48,"Stabu iela 48, Rīga",15:00,16:00
+49,test49,"Brīvības iela 49, Rīga",16:00,17:00
+50,test50,"Lāčplēša iela 50, Rīga",17:00,18:00
+51,test51,"Krišjāņa Barona iela 51, Rīga",08:00,09:00
+52,test52,"Elizabetes iela 52, Rīga",09:00,10:00
+53,test53,"Dzirnavu iela 53, Rīga",10:00,11:00
+54,test54,"Stabu iela 54, Rīga",11:00,12:00
+55,test55,"Brīvības iela 55, Rīga",12:00,13:00
+56,test56,"Lāčplēša iela 56, Rīga",13:00,14:00
+57,test57,"Krišjāņa Barona iela 57, Rīga",14:00,15:00
+58,test58,"Elizabetes iela 58, Rīga",15:00,16:00
+59,test59,"Dzirnavu iela 59, Rīga",16:00,17:00
+60,test60,"Stabu iela 60, Rīga",17:00,18:00
+61,test61,"Brīvības iela 61, Rīga",08:00,09:00
+62,test62,"Lāčplēša iela 62, Rīga",09:00,10:00
+63,test63,"Krišjāņa Barona iela 63, Rīga",10:00,11:00
+64,test64,"Elizabetes iela 64, Rīga",11:00,12:00
+65,test65,"Dzirnavu iela 65, Rīga",12:00,13:00
+66,test66,"Stabu iela 66, Rīga",13:00,14:00
+67,test67,"Brīvības iela 67, Rīga",14:00,15:00
+68,test68,"Lāčplēša iela 68, Rīga",15:00,16:00
+69,test69,"Krišjāņa Barona iela 69, Rīga",16:00,17:00
+70,test70,"Elizabetes iela 70, Rīga",17:00,18:00
+71,test71,"Dzirnavu iela 71, Rīga",08:00,09:00
+72,test72,"Stabu iela 72, Rīga",09:00,10:00
+73,test73,"Brīvības iela 73, Rīga",10:00,11:00
+74,test74,"Lāčplēša iela 74, Rīga",11:00,12:00
+75,test75,"Krišjāņa Barona iela 75, Rīga",12:00,13:00
+76,test76,"Elizabetes iela 76, Rīga",13:00,14:00
+77,test77,"Dzirnavu iela 77, Rīga",14:00,15:00
+78,test78,"Stabu iela 78, Rīga",15:00,16:00
+79,test79,"Brīvības iela 79, Rīga",16:00,17:00
+80,test80,"Lāčplēša iela 80, Rīga",17:00,18:00
+81,test81,"Krišjāņa Barona iela 81, Rīga",08:00,09:00
+82,test82,"Elizabetes iela 82, Rīga",09:00,10:00
+83,test83,"Dzirnavu iela 83, Rīga",10:00,11:00
+84,test84,"Stabu iela 84, Rīga",11:00,12:00
+85,test85,"Brīvības iela 85, Rīga",12:00,13:00
+86,test86,"Lāčplēša iela 86, Rīga",13:00,14:00
+87,test87,"Krišjāņa Barona iela 87, Rīga",14:00,15:00
+88,test88,"Elizabetes iela 88, Rīga",15:00,16:00
+89,test89,"Dzirnavu iela 89, Rīga",16:00,17:00
+90,test90,"Stabu iela 90, Rīga",17:00,18:00
+91,test91,"Brīvības iela 91, Rīga",08:00,09:00
+92,test92,"Lāčplēša iela 92, Rīga",09:00,10:00
+93,test93,"Krišjāņa Barona iela 93, Rīga",10:00,11:00
+94,test94,"Elizabetes iela 94, Rīga",11:00,12:00
+95,test95,"Dzirnavu iela 95, Rīga",12:00,13:00
+96,test96,"Stabu iela 96, Rīga",13:00,14:00
+97,test97,"Brīvības iela 97, Rīga",14:00,15:00
+98,test98,"Lāčplēša iela 98, Rīga",15:00,16:00
+99,test99,"Krišjāņa Barona iela 99, Rīga",16:00,17:00
+100,test100,"Elizabetes iela 100, Rīga",17:00,18:00
+101,test101,"Dzirnavu iela 101, Rīga",08:00,09:00
+102,test102,"Stabu iela 102, Rīga",09:00,10:00
+103,test103,"Brīvības iela 103, Rīga",10:00,11:00
+104,test104,"Lāčplēša iela 104, Rīga",11:00,12:00
+105,test105,"Krišjāņa Barona iela 105, Rīga",12:00,13:00
+106,test106,"Elizabetes iela 106, Rīga",13:00,14:00
+107,test107,"Dzirnavu iela 107, Rīga",14:00,15:00
+108,test108,"Stabu iela 108, Rīga",15:00,16:00
+109,test109,"Brīvības iela 109, Rīga",16:00,17:00
+110,test110,"Lāčplēša iela 110, Rīga",17:00,18:00
+111,test111,"Krišjāņa Barona iela 111, Rīga",08:00,09:00
+112,test112,"Elizabetes iela 112, Rīga",09:00,10:00
+113,test113,"Dzirnavu iela 113, Rīga",10:00,11:00
+114,test114,"Stabu iela 114, Rīga",11:00,12:00
+115,test115,"Brīvības iela 115, Rīga",12:00,13:00
+116,test116,"Lāčplēša iela 116, Rīga",13:00,14:00
+117,test117,"Krišjāņa Barona iela 117, Rīga",14:00,15:00
+118,test118,"Elizabetes iela 118, Rīga",15:00,16:00
+119,test119,"Dzirnavu iela 119, Rīga",16:00,17:00
+120,test120,"Stabu iela 120, Rīga",17:00,18:00
+121,test121,"Brīvības iela 121, Rīga",08:00,09:00
+122,test122,"Lāčplēša iela 122, Rīga",09:00,10:00
+123,test123,"Krišjāņa Barona iela 123, Rīga",10:00,11:00
+124,test124,"Elizabetes iela 124, Rīga",11:00,12:00
+125,test125,"Dzirnavu iela 125, Rīga",12:00,13:00
+126,test126,"Stabu iela 126, Rīga",13:00,14:00
+127,test127,"Brīvības iela 127, Rīga",14:00,15:00
+128,test128,"Lāčplēša iela 128, Rīga",15:00,16:00
+129,test129,"Krišjāņa Barona iela 129, Rīga",16:00,17:00
+130,test130,"Elizabetes iela 130, Rīga",17:00,18:00
+131,test131,"Dzirnavu iela 131, Rīga",08:00,09:00
+132,test132,"Stabu iela 132, Rīga",09:00,10:00
+133,test133,"Brīvības iela 133, Rīga",10:00,11:00
+134,test134,"Lāčplēša iela 134, Rīga",11:00,12:00
+135,test135,"Krišjāņa Barona iela 135, Rīga",12:00,13:00
+136,test136,"Elizabetes iela 136, Rīga",13:00,14:00
+137,test137,"Dzirnavu iela 137, Rīga",14:00,15:00
+138,test138,"Stabu iela 138, Rīga",15:00,16:00
+139,test139,"Brīvības iela 139, Rīga",16:00,17:00
+140,test140,"Lāčplēša iela 140, Rīga",17:00,18:00
+141,test141,"Krišjāņa Barona iela 141, Rīga",08:00,09:00
+142,test142,"Elizabetes iela 142, Rīga",09:00,10:00
+143,test143,"Dzirnavu iela 143, Rīga",10:00,11:00
+144,test144,"Stabu iela 144, Rīga",11:00,12:00
+145,test145,"Brīvības iela 145, Rīga",12:00,13:00
+146,test146,"Lāčplēša iela 146, Rīga",13:00,14:00
+147,test147,"Krišjāņa Barona iela 147, Rīga",14:00,15:00
+148,test148,"Elizabetes iela 148, Rīga",15:00,16:00
+149,test149,"Dzirnavu iela 149, Rīga",16:00,17:00
+150,test150,"Stabu iela 150, Rīga",17:00,18:00
