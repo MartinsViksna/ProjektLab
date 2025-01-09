@@ -93,7 +93,7 @@ class SolomonVRP:
     def _prepare_time_windows(self):
         """Prepare time windows for all locations including depot"""
         # Depot time window (assumed to be open all day)
-        time_windows = [(0, 24 * 60)]
+        time_windows = [(0,  24* 60)]
         
         # Add time windows for all deliveries
         for _, delivery in self.deliveries.iterrows():

@@ -11,13 +11,15 @@ import pandas as pd
 from datetime import datetime
 from models.route import Package, CreatedRoutes, User
 from waitress import serve
+import logging
+import googlemaps
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(Config)
-geolocator = Nominatim(
-    user_agent="geoapp",
-    timeout=20  # Increase timeout to 10 seconds
-)
+gmaps = googlemaps.Client(key='AIzaSyDncbIf575XCBKsfjRYupPqFSpixYlEoRc')
 login_manager = LoginManager(app)
 login_manager.login_view = "login" 
 routes = []
@@ -32,27 +34,29 @@ with app.app_context():
 
 def geocode_address(address, retry=0):
     """
-    Geocode an address with retry logic and delay between attempts
+    Geocode an address with retry logic and delay between attempts using Google Maps API
     """
-    if retry > 50:  # Limit retries to 3 attempts
+    if retry > 10:  # Limit retries to 10 attempts
+        logger.error(f"Failed to geocode address after {retry} attempts: {address}")
         return None, None
         
     try:
         # Add delay between requests to avoid rate limiting
-        time.sleep(1)
+        time.sleep(0.5)
         
-        location = geolocator.geocode(address)
-        if location:
-            return location.latitude, location.longitude
-        return None, None
-        
-    except (GeocoderTimedOut, GeocoderServiceError):
-        # Exponential backoff between retries
-        time.sleep(min(2 ** retry, 5))
+        geocode_result = gmaps.geocode(address)
+        if geocode_result:
+            location = geocode_result[0]['geometry']['location']
+            logger.info(f"Geocoded address: {address} -> (lat: {location['lat']}, lon: {location['lng']})")
+            return location['lat'], location['lng']
+        logger.warning(f"Geocoding failed for address: {address}")
         return geocode_address(address, retry + 1)
+        
     except Exception as e:
-        print(f"Geocoding error for {address}: {str(e)}")
-        return None, None
+        # Exponential backoff between retries
+        logger.warning(f"Geocoding error for {address}: {str(e)}. Retrying... (Attempt {retry + 1})")
+        time.sleep(0.5)
+        return geocode_address(address, retry + 1)
 
 # User loader function for Flask-Login
 @login_manager.user_loader
