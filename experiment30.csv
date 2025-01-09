@@ -1,0 +1,31 @@
+packageID,Client,Address,TimeFrom,TimeTo
+1,exp1,"elizabetes iela 83, riga",12:00,13:00
+2,exp2,"terbatas iela 55, riga",13:00,14:00
+3,exp3,"grostonas iela 21, riga",13:00,14:00
+4,exp4,"ieriku iela 3, riga",12:00,13:00
+5,exp5,"jana asara iela 24, riga",17:00,18:00
+6,exp6,"krasta iela 36, riga",17:00,18:00
+7,exp7,"krasta iela 79, riga",17:00,18:00
+8,exp8,"negu iela 7, riga",16:00,17:00
+9,exp9,"eksporta iela 14, riga",16:00,17:00
+10,exp10,"nakotnes iela 1, kekava",13:00,16:00
+11,exp11,"gaismas iela 23a, kekava",13:00,16:00
+12,exp12,"rigas iela 73, kekava",13:00,16:00
+13,exp13,"rigas iela 22a, kekava",13:00,16:00
+14,exp14,"livzemes iela, salaspils",13:00,16:00
+15,exp15,"livzemes iela 26, salaspils",13:00,16:00
+16,exp16,"skolas iela 4e, salaspils",13:00,16:00
+17,exp17,"dienvidu iela 7, salaspils",13:00,16:00
+18,exp18,"kantora iela 128, marupe",08:00,10:00
+19,exp19,"liela iela 26, marupe",08:00,10:00
+20,exp20,"liela iela 47, marupe",08:00,10:00
+21,exp21,"vitinu iela 4, marupe",08:00,10:00
+22,exp22,"grivas prospekts 4b, ogre",11:00,13:00
+23,exp23,"rigas iela 5, ogre",11:00,13:00
+24,exp24,"brivibas iela 22, ogre",11:00,13:00
+25,exp25,"brivibas iela 15, ogre",11:00,13:00
+26,exp26,"iecavas iela 2, baldone",10:00,12:00
+27,exp27,"rigas iela 67, baldone",10:00,12:00
+28,exp28,"lejas iela 4, baldone",10:00,12:00
+29,exp29,"cerinu iela 10, vecumnieki",15:00,17:00
+30,exp30,"cerinu iela 17, vecumnieki",15:00,17:00
