@@ -4,11 +4,10 @@ from Solomon import SolomonVRP
 from flask_migrate import Migrate
 from extensions import db
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from geopy.geocoders import Nominatim
-from geopy.exc import GeocoderTimedOut, GeocoderServiceError
+
 import time
 import pandas as pd
-from datetime import datetime
+
 from models.route import Package, CreatedRoutes, User
 from waitress import serve
 import logging
