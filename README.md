@@ -32,3 +32,5 @@ Projekts "Preču piegādes maršrutēšana" ir izstrādāts, lai optimizētu pre
 
 Programmas datubāzē jau ir pieejami maršruta faili, kas paredzēti testēšanai un sistēmas darbības demonstrēšanai.
 
+Autori : Grupa: Edvards Muraško, Mārtiņš Vīksna, Sandijs Krūmiņš, Miks Matīss Liepiņš
+
