@@ -95,8 +95,8 @@ Testa kopas veidus šim algoritmam nav ko pielikt pie mainīgajiem, jo priekš n
 | N | 30 | 60 | 100 |
 | --- | --- | --- | --- |
 | Izmantot kurjeru skaits | 6 | 10 | 12 |
-| Kopējais maršruta laiks | 2887minJeb48h un 7min | 4716minJeb78h un 36min | 5754minJeb95h un 54min |
-| Individuālais vidējais maršruta laiks(kurjera) | 481minJeb8h un 1min | 471minJeb7h un 51min | 479,5minJeb7h un 59min |
+| Kopējais maršruta laiks | 2887min Jeb 48h un 7min | 4716min Jeb 78h un 36min | 5754min Jeb 95h un 54min |
+| Individuālais vidējais maršruta laiks(kurjera) | 481min Jeb 8h un 1min | 471min Jeb 7h un 51min | 479,5min Jeb 7h un 59min |
 
 **Secinājumi**
 
