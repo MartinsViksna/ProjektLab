@@ -1,6 +1,6 @@
 # Preču piegādes maršrutēšana
 
-Projekts "Preču piegādes maršrutēšana" ir izstrādāts, lai optimizētu preču piegādes maršrutus, nodrošinot efektīvu un ātru piegādi. Programma ir izstrādāta Python valodā un darbojas uz jebkuras ierīces, kas atbalsta Python versiju 3.11.
+Projekts "Preču piegādes maršrutēšana" ir izstrādāts, lai optimizētu preču piegādes maršrutus, nodrošinot efektīvu un ātru piegādi. Programma ir izstrādāta Python valodā un ir iespējams palaist kodu uz jebkuras ierīces, kas atbalsta Python versiju 3.11.
 
 ## Funkcijas
 
