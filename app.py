@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(Config)
-gmaps = googlemaps.Client(key='AIzaSyDncbIf575XCBKsfjRYupPqFSpixYlEoRc')
+gmaps = googlemaps.Client(key='your-api-key')
 login_manager = LoginManager(app)
 login_manager.login_view = "login" 
 routes = []
