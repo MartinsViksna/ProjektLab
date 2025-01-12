@@ -35,6 +35,7 @@ Programmas datubāzē jau ir pieejami maršruta faili, kas paredzēti testēšan
 ## UPDATE
 
 Ir uzlikts uz Azure servera, adrese lai pieslegots - http://4.231.102.98/ . 
+Ir nonemts API key no github un atstats uz lokajas masinas.
 
 Grupa: Edvards Muraško, Mārtiņš Vīksna, Sandijs Krūmiņš, Miks Matīss Liepiņš
 
