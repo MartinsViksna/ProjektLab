@@ -98,6 +98,15 @@ Testa kopas veidus šim algoritmam nav ko pielikt pie mainīgajiem, jo priekš n
 | Kopējais maršruta laiks | 2887min Jeb 48h un 7min | 4716min Jeb 78h un 36min | 5754min Jeb 95h un 54min |
 | Individuālais vidējais maršruta laiks(kurjera) | 481min Jeb 8h un 1min | 471min Jeb 7h un 51min | 479,5min Jeb 7h un 59min |
 
+**Lietotāju stāsti**
+
+| Nr. | Lietotāja stāsts | Izpildītājs (Jā/Nē) | Komentārs |
+|-----|------------------|---------------------|-----------|
+| 1.  | Loģistikas vadītājs vēlas atrast optimālo kurjeru skaitu pie dažāda pieprasījuma līmeņa, jo tas samazina piegādes izmaksas un uzlabo resursu izmantošanu. | Jā | Loģistikas vadītājam ir iespējams vizuāli apskatīt izveidotos maršrutus vizuāli, kā arī redzēt detalizētu informāciju par maršrutiem. |
+| 2.  | Kurjers vēlas saņemt efektīvu un pārskatāmu maršrutu plānu, jo tas samazina ceļošanas laiku un ļauj pabeigt piegādes ātrāk. | Jā | Kurjers var saņemt izveidoto maršrutu no izveidotājiem. |
+| 3.  | Klients vēlas saņemt precīzu informāciju par piegādes laiku, jo tas palielina uzticību uzņēmumam un ļauj labāk plānot savu laiku. | Jā | Maršruts stingri ņem vērā dotos laikus, lai izveidotu maršrutus. |
+| 4.  | Datu analītiķis vēlas izvērtēt piegādes efektivitāti dažādam pieprasījuma kopām, jo tas palīdz identificēt vājās vietas un uzlabot algoritmu precizitāti nākotnē. | Jā | Datu analītiķis var iegūt detalizētus datus par maršrutiem. |
+
 **Secinājumi**
 
 Izstrādātā maršrutēšanas programma demonstrē augstu efektivitāti, nodrošinot elastīgu resursu pārvaldību piegādes ķēdēs. Analīze parāda, ka izmantoto kurjeru skaits tiek dinamiski pielāgots piegādes punktu skaitam, kas ļauj samazināt nevajadzīgas izmaksas un nodrošināt optimālu transportlīdzekļu izmantošanu. Tas ir īpaši svarīgi uzņēmumiem, kas strādā ar lieliem piegādes apjomiem un sarežģītiem maršrutiem.
